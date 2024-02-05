@@ -25,7 +25,7 @@ namespace Pumb
         {
 
             //Payments
-            string[] payments = { "CASE_CONTR_NUM", "date_pay", "pay_cvr_wo_cons", "PACK_ASSIGN_DATE", "CUST_AFM", "Рефинансирование", "Договорное списание" };
+            string[] rests = { "CASE_CONTR_NUM", "date_pay", "pay_cvr_wo_cons", "PACK_ASSIGN_DATE", "CUST_AFM", "Рефинансирование", "Договорное списание" };
 
 
             // relative path
@@ -44,7 +44,7 @@ namespace Pumb
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("filter data field is:");
                 Console.ResetColor();
-                Console.WriteLine(string.Join(" ", payments));
+                Console.WriteLine(string.Join(" ", rests));
 
 
                 using (var package = new ExcelPackage(new FileInfo(currentDirectoryGetXlsx)))
@@ -78,7 +78,7 @@ namespace Pumb
                         string header = columnHeaders[index - 1];
                         bool shouldRemove = true;
                         ///Filter
-                        foreach (string cutField in payments)
+                        foreach (string cutField in rests)
                         {
                             if (string.Equals(header, cutField, StringComparison.OrdinalIgnoreCase))
                             {

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pumb", "Pumb\Pumb.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormatLibrary", "FormatLibrary\FormatLibrary.csproj", "{C14803B7-4A6A-42BE-BCF6-C313D9785A26}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestPumb", "RestPumb\RestPumb.csproj", "{31FA5583-AF78-44F1-947F-2C28D8C52105}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{C14803B7-4A6A-42BE-BCF6-C313D9785A26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C14803B7-4A6A-42BE-BCF6-C313D9785A26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C14803B7-4A6A-42BE-BCF6-C313D9785A26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31FA5583-AF78-44F1-947F-2C28D8C52105}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31FA5583-AF78-44F1-947F-2C28D8C52105}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31FA5583-AF78-44F1-947F-2C28D8C52105}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31FA5583-AF78-44F1-947F-2C28D8C52105}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

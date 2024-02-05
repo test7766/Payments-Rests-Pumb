@@ -21,7 +21,7 @@ namespace FormatLibrary
         }
 
 
-
+        //yyyy-mm-dd
         public static string FormatDate(string cellValue)
         {
             //create array string
@@ -29,10 +29,16 @@ namespace FormatLibrary
             DateTime newDatetime;
             if (DateTime.TryParseExact(cellValue.Replace('-', '.'), "dd.MM.yyyy", CultureInfo.CurrentCulture, DateTimeStyles.None, out newDatetime))
             {
+
+                var ttt = newDatetime.ToString("dd.MM.yyyy");
                 return newDatetime.ToString("dd.MM.yyyy");
             }
             return cellValue.ToString();
         }
+
+        public static string MobilePhone(string phones) => phones.Replace('|', ',');
+            
+        
 
     }
 }
