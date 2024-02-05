@@ -1,45 +1,19 @@
 ﻿
+using FormatLibrary;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-
 
 namespace Pumb
 {
     public class Program
     {
-
-        //Format in 3 column 2 700,00 -->2700,00 
-        static string GetFormattedCellValue(string cellValue)
-        {
-            if (decimal.TryParse(cellValue.Replace(".", ","), out decimal decimalValue))
-                return Math.Round(decimalValue, 2).ToString();
-            
-            return cellValue;
-        }
-
-
-        //Format DateTime from dd-mm-yyy ---->  dd.mm.yyyy
-        static string FormatDate(string cellValue)
-        {
-            //create array string
-
-            DateTime newDatetime;
-            if (DateTime.TryParseExact(cellValue.Replace('-', '.'), "dd.MM.yyyy", CultureInfo.CurrentCulture, DateTimeStyles.None, out newDatetime))
-            {
-                return newDatetime.ToString("dd.MM.yyyy");
-            }
-            return cellValue.ToString();
-        }
-
-
-
+    
         static void Main(string[] args)
         {
-
+         
             Console.Title = "Платежі Пумб";
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             LoadExcelFile();
@@ -47,10 +21,9 @@ namespace Pumb
             Console.ReadKey();
         }
 
-
-
         static void LoadExcelFile()
         {
+
             //Payments
             string[] payments = { "CASE_CONTR_NUM", "date_pay", "pay_cvr_wo_cons", "PACK_ASSIGN_DATE", "CUST_AFM", "Рефинансирование", "Договорное списание" };
 
@@ -59,9 +32,6 @@ namespace Pumb
             string currentDirectoryGetXlsx = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\p.xlsx";
 
             string outDirectoryPayment = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\p.csv";
-
-
-
 
             try
             {
@@ -77,7 +47,7 @@ namespace Pumb
                 Console.WriteLine(string.Join(" ", payments));
 
 
-                using (var package = new OfficeOpenXml.ExcelPackage(new FileInfo(currentDirectoryGetXlsx)))
+                using (var package = new ExcelPackage(new FileInfo(currentDirectoryGetXlsx)))
                 {
 
                     var worksheet = package.Workbook.Worksheets[0];
@@ -146,13 +116,15 @@ namespace Pumb
                                 {
                                     if (col == 3)
                                     {
-                                        writer.Write($"{GetFormattedCellValue(worksheet.Cells[row, col].Text)};");
-                                        Console.Write($"{GetFormattedCellValue(worksheet.Cells[row, col].Text)};");
+                                        string formatNumber = FormatHelper.GetFormattedCellValueNumber(worksheet.Cells[row, col].Text);
+                                        writer.Write($"{formatNumber};");
+                                        Console.Write($"{formatNumber};");
                                     }
                                     else if (col == 2 || col == 4)
                                     {
-                                        writer.Write($"{FormatDate(worksheet.Cells[row, col].Text)};");
-                                        Console.Write($"{FormatDate(worksheet.Cells[row, col].Text)};");
+                                        string newFormatDate = FormatHelper.FormatDate(worksheet.Cells[row, col].Text);
+                                        writer.Write($"{newFormatDate};");
+                                        Console.Write($"{newFormatDate};");
                                     }
                                     else
                                     {
@@ -166,15 +138,15 @@ namespace Pumb
 
                                     if (col == 3)
                                     {
-                                        var newCellFormat = GetFormattedCellValue(worksheet.Cells[row, col].Text);
-                                        writer.Write($"{newCellFormat};");
-                                        Console.Write($"{newCellFormat};");
+                                        var formatNumber = FormatHelper.GetFormattedCellValueNumber(worksheet.Cells[row, col].Text);
+                                        writer.Write($"{formatNumber};");
+                                        Console.Write($"{formatNumber};");
                                     }
                                     else if (col == 2 || col == 4)
                                     {
-                                        var newCellFormat = GetFormattedCellValue(worksheet.Cells[row, col].Text);
-                                        writer.Write($"{newCellFormat};");
-                                        Console.Write($"{newCellFormat};");
+                                        var newFormatDate = FormatHelper.GetFormattedCellValueNumber(worksheet.Cells[row, col].Text);
+                                        writer.Write($"{newFormatDate};");
+                                        Console.Write($"{newFormatDate};");
                                     }
                                     else
                                     {
