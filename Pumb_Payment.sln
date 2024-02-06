@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pumb", "Pumb\Pumb.csproj", "{2121CAE3-E051-4E6F-954B-5C2F852660F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormatLibrary", "FormatLibrary\FormatLibrary.csproj", "{C14803B7-4A6A-42BE-BCF6-C313D9785A26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelperLibrary", "FormatLibrary\HelperLibrary.csproj", "{C14803B7-4A6A-42BE-BCF6-C313D9785A26}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestPumb", "RestPumb\RestPumb.csproj", "{31FA5583-AF78-44F1-947F-2C28D8C52105}"
 EndProject

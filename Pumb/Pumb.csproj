@@ -86,9 +86,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FormatLibrary\FormatLibrary.csproj">
+    <ProjectReference Include="..\FormatLibrary\HelperLibrary.csproj">
       <Project>{C14803B7-4A6A-42BE-BCF6-C313D9785A26}</Project>
-      <Name>FormatLibrary</Name>
+      <Name>HelperLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

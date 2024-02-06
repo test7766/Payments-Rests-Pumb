@@ -2,7 +2,6 @@
 using FormatLibrary;
 using OfficeOpenXml;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -19,166 +18,159 @@ namespace Pumb
             LoadExcelFile();
             Console.WriteLine("pres key to continue....");
             Console.ReadKey();
-        }
 
-        static void LoadExcelFile()
-        {
-
-            //Payments
-            string[] rests = { "CASE_CONTR_NUM", "date_pay", "pay_cvr_wo_cons", "PACK_ASSIGN_DATE", "CUST_AFM", "Рефинансирование", "Договорное списание" };
-
-
-            // relative path
-            string currentDirectoryGetXlsx = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\p.xlsx";
-
-            string outDirectoryPayment = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\p.csv";
-
-            try
+            void LoadExcelFile()
             {
 
-                ///check Input xlsx
-                if (!File.Exists(currentDirectoryGetXlsx))
-                    throw new Exception($"File {currentDirectoryGetXlsx} is not exist!!!");
+                ClassHelper classHelper = new ClassHelper();
+                //Payments
+                string[] rests = { "CASE_CONTR_NUM", "date_pay", "pay_cvr_wo_cons", "PACK_ASSIGN_DATE", "CUST_AFM", "Рефинансирование", "Договорное списание" };
 
+                string[] originalHeaders = { "date", "CASE_BRANCH_INTCODE", "case_contr_num", "CUST_CIF", "product", "bucket_before_pmt", "date_pay", "pay_month", "agency",
+                "pay_total","debt","pay_cvr_wo_cons","bank","delinquent_days_at_start_month","category","PACK_ASSIGN_DATE","CUST_AFM","Рефинансирование",
+                "Договорное списание","case_code","Код плательщика"};
 
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("filter data field is:");
-                Console.ResetColor();
-                Console.WriteLine(string.Join(" ", rests));
+                // relative path
+                string currentDirectoryGetXlsx = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\p.xlsx";
 
+                string outDirectoryPayment = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\p.csv";
 
-                using (var package = new ExcelPackage(new FileInfo(currentDirectoryGetXlsx)))
+                try
                 {
 
-                    var worksheet = package.Workbook.Worksheets[0];
-                    if (worksheet == null)
-                        throw new Exception("Worksheet is null");
-
-                    if (worksheet.Rows.Count() == 0)
-                        throw new Exception("worksheet.Rows is null");
+                    ///check Input xlsx
+                    if (!File.Exists(currentDirectoryGetXlsx))
+                        throw new Exception($"File {currentDirectoryGetXlsx} is not exist!!!");
 
 
-                    if (worksheet.Columns.Count() == 1)
-                        throw new Exception("worksheet.Columns is null");
-
-
-                    // headers
-                    var columnHeaders = worksheet.Cells[1, 1, 1, worksheet.Dimension.Columns]
-                        .Select(cell => cell.Text.Trim())
-                        .ToList();
-
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine("Headers :");
-                    Console.ResetColor();
-                    Console.WriteLine(string.Join(" ", columnHeaders));
-                    List<int> columnsToRemove = new List<int>();
-
-                    for (int index = 1; index <= columnHeaders.Count; index++)
+                    using (var package = new ExcelPackage(new FileInfo(currentDirectoryGetXlsx)))
                     {
-                        string header = columnHeaders[index - 1];
-                        bool shouldRemove = true;
-                        ///Filter
-                        foreach (string cutField in rests)
+
+                        var worksheet = package.Workbook.Worksheets[0];
+                        if (worksheet == null)
+                            throw new Exception("Worksheet is null");
+
+                        if (worksheet.Rows.Count() == 0)
+                            throw new Exception("worksheet.Rows is null");
+
+
+                        if (worksheet.Columns.Count() == 1)
+                            throw new Exception("worksheet.Columns is null");
+
+
+                        // headers
+                        var columnHeaders = worksheet.Cells[1, 1, 1, worksheet.Dimension.Columns]
+                            .Select(cell => cell.Text.Trim())
+                            .ToList();
+
+                        if (columnHeaders.Count() != originalHeaders.Count())
+                            throw new Exception("Headers mismatch ");
+
+                        if (!classHelper.CompareHeaders(originalHeaders, columnHeaders))
+                            throw new Exception("Invalid file");
+
+                        int originColumns = worksheet.Columns.Count();
+
+                        foreach (var columnIndex in classHelper.GetColumnsToRemove(columnHeaders, rests).OrderByDescending(i => i))
+                            worksheet.DeleteColumn(columnIndex, 1);
+
+
+
+                        int rowCount = worksheet.Dimension.Rows;
+                        int colCount = worksheet.Dimension.Columns;
+
+
+                        ///Output Csv
+
+
+                        using (var writer = new StreamWriter(outDirectoryPayment))
                         {
-                            if (string.Equals(header, cutField, StringComparison.OrdinalIgnoreCase))
+                            for (int row = 1; row <= rowCount; row++)
                             {
-                                shouldRemove = false;
-                                break;
-                            }
-                        }
-
-                        if (shouldRemove)
-                        {
-                            columnsToRemove.Add(index);
-                        }
-                    }
-
-                    foreach (var columnIndex in columnsToRemove.OrderByDescending(i => i))
-                        worksheet.DeleteColumn(columnIndex, 1);
-
-
-
-                    int rowCount = worksheet.Dimension.Rows;
-                    int colCount = worksheet.Dimension.Columns;
-
-
-                    ///Output Csv
-
-
-                    using (var writer = new StreamWriter(outDirectoryPayment))
-                    {
-                        for (int row = 1; row <= rowCount; row++)
-                        {
-                            for (int col = 1; col <= colCount; col++)
-                            {
-                                var column = worksheet.Cells[row, col].Text;
-                                if (col == colCount)
+                                for (int col = 1; col <= colCount; col++)
                                 {
-                                    if (col == 3)
+                                    var column = worksheet.Cells[row, col].Text;
+                                    if (col == colCount)
                                     {
-                                        string formatNumber = FormatHelper.GetFormattedCellValueNumber(worksheet.Cells[row, col].Text);
-                                        writer.Write($"{formatNumber};");
-                                        Console.Write($"{formatNumber};");
-                                    }
-                                    else if (col == 2 || col == 4)
-                                    {
-                                        string newFormatDate = FormatHelper.FormatDate(worksheet.Cells[row, col].Text);
-                                        writer.Write($"{newFormatDate};");
-                                        Console.Write($"{newFormatDate};");
+                                        if (col == 3)
+                                        {
+                                            string formatNumber = classHelper.GetFormattedCellValueNumber(worksheet.Cells[row, col].Text);
+                                            writer.Write($"{formatNumber};");
+                                            Console.Write($"{formatNumber};");
+                                        }
+                                        else if (col == 2 || col == 4)
+                                        {
+                                            string newFormatDate = classHelper.FormatDate(worksheet.Cells[row, col].Text);
+                                            writer.Write($"{newFormatDate};");
+                                            Console.Write($"{newFormatDate};");
+                                        }
+                                        else
+                                        {
+                                            writer.Write($"{worksheet.Cells[row, col].Text}");
+                                            Console.Write($"{worksheet.Cells[row, col].Text}");
+                                        }
                                     }
                                     else
                                     {
-                                        writer.Write($"{worksheet.Cells[row, col].Text}");
-                                        Console.Write($"{worksheet.Cells[row, col].Text}");
+
+                                        if (col == 3)
+                                        {
+                                            var formatNumber = classHelper.GetFormattedCellValueNumber(worksheet.Cells[row, col].Text);
+                                            writer.Write($"{formatNumber};");
+                                            Console.Write($"{formatNumber};");
+                                        }
+                                        else if (col == 2 || col == 4)
+                                        {
+                                            var newFormatDate = classHelper.GetFormattedCellValueNumber(worksheet.Cells[row, col].Text);
+                                            writer.Write($"{newFormatDate};");
+                                            Console.Write($"{newFormatDate};");
+                                        }
+                                        else
+                                        {
+                                            writer.Write($"{worksheet.Cells[row, col].Text};");
+                                            Console.Write($"{worksheet.Cells[row, col].Text};");
+                                        }
+
                                     }
                                 }
-                                else
-                                {
-
-
-                                    if (col == 3)
-                                    {
-                                        var formatNumber = FormatHelper.GetFormattedCellValueNumber(worksheet.Cells[row, col].Text);
-                                        writer.Write($"{formatNumber};");
-                                        Console.Write($"{formatNumber};");
-                                    }
-                                    else if (col == 2 || col == 4)
-                                    {
-                                        var newFormatDate = FormatHelper.GetFormattedCellValueNumber(worksheet.Cells[row, col].Text);
-                                        writer.Write($"{newFormatDate};");
-                                        Console.Write($"{newFormatDate};");
-                                    }
-                                    else
-                                    {
-                                        writer.Write($"{worksheet.Cells[row, col].Text};");
-                                        Console.Write($"{worksheet.Cells[row, col].Text};");
-                                    }
-
-                                }
-
-
+                                writer.WriteLine();
+                                Console.WriteLine();
                             }
-                            writer.WriteLine();
-                            Console.WriteLine();
-
                         }
+        
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("filter headers:");
+                        Console.ResetColor();
+                        Console.WriteLine(string.Join(" ", rests));
 
+                        Console.WriteLine("---------------------");
 
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("Original headers :");
+                        Console.ResetColor();
+                        Console.WriteLine(string.Join(" ", columnHeaders));
+
+                        Console.WriteLine("---------------------");
+
+                        Console.Write("Count of rows : "); Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine($"{worksheet.Rows.Count()}");
+                        Console.ResetColor();
+                        Console.Write("Count of Columns : "); Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine($"{originColumns}");
+                        Console.ResetColor();
+
+                        Console.WriteLine("---------------------");
+
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"Data is sucsesufull save in {outDirectoryPayment}");
+                        Console.ResetColor();               
                     }
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"Data is sucsesufull save in {outDirectoryPayment}");
-                    Console.ResetColor();
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-
-
         }
-
 
     }
 }
