@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelperLibrary", "FormatLibr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestPumb", "RestPumb\RestPumb.csproj", "{31FA5583-AF78-44F1-947F-2C28D8C52105}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrivatPayments", "PrivatPayments\PrivatPayments.csproj", "{9F2F1908-CE1F-4E7E-AF06-F0DFF1C79E3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrivateRests", "PrivateRests\PrivateRests.csproj", "{532BA3C6-1E3E-4FC1-B549-C618FCFA0E0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{31FA5583-AF78-44F1-947F-2C28D8C52105}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31FA5583-AF78-44F1-947F-2C28D8C52105}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31FA5583-AF78-44F1-947F-2C28D8C52105}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F2F1908-CE1F-4E7E-AF06-F0DFF1C79E3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F2F1908-CE1F-4E7E-AF06-F0DFF1C79E3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F2F1908-CE1F-4E7E-AF06-F0DFF1C79E3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F2F1908-CE1F-4E7E-AF06-F0DFF1C79E3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{532BA3C6-1E3E-4FC1-B549-C618FCFA0E0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{532BA3C6-1E3E-4FC1-B549-C618FCFA0E0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{532BA3C6-1E3E-4FC1-B549-C618FCFA0E0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{532BA3C6-1E3E-4FC1-B549-C618FCFA0E0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
