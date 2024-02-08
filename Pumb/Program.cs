@@ -1,5 +1,4 @@
-﻿
-using FormatLibrary;
+﻿using FormatLibrary;
 using OfficeOpenXml;
 using System;
 using System.IO;
@@ -12,7 +11,8 @@ namespace Pumb
     
         static void Main(string[] args)
         {
-         
+
+
             Console.Title = "Платежі Пумб";
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             LoadExcelFile();
@@ -75,7 +75,6 @@ namespace Pumb
                             worksheet.DeleteColumn(columnIndex, 1);
 
 
-
                         int rowCount = worksheet.Dimension.Rows;
                         int colCount = worksheet.Dimension.Columns;
 
@@ -89,12 +88,14 @@ namespace Pumb
                             {
                                 for (int col = 1; col <= colCount; col++)
                                 {
-                                    var column = worksheet.Cells[row, col].Text;
+                                
+                              
                                     if (col == colCount)
                                     {
                                         if (col == 3)
                                         {
-                                            string formatNumber = classHelper.GetFormattedCellValueNumber(worksheet.Cells[row, col].Text);
+                                          
+                                            string formatNumber = classHelper.GetFormattedCellValueNumber(worksheet.Cells[row, col].Value.ToString());
                                             writer.Write($"{formatNumber};");
                                             Console.Write($"{formatNumber};");
                                         }
@@ -115,7 +116,8 @@ namespace Pumb
 
                                         if (col == 3)
                                         {
-                                            var formatNumber = classHelper.GetFormattedCellValueNumber(worksheet.Cells[row, col].Text);
+                                           var formatNumber = classHelper.GetFormattedCellValueNumber(worksheet.Cells[row, col].Value.ToString());
+                                          
                                             writer.Write($"{formatNumber};");
                                             Console.Write($"{formatNumber};");
                                         }

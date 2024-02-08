@@ -29,7 +29,6 @@ namespace PrivatPayments
                 "Просрочка по активу на початок дати проводки в грн","Сума платежу","Сума реального погашення прострочки в грн","Курс валюти","Кіл-ть днів прострочки на дату надходження",
                 "Автоматичне погашення з рахунків боржника"};
 
-                string replaceLastField = "Автоматичне погашення з рахунків боржника";
                 // relative path
                 string currentDirectoryGetXlsx = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\p.xlsx";
 

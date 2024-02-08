@@ -8,16 +8,15 @@ namespace FormatLibrary
     public class ClassHelper
     {
 
-
-        //Format in 3 column 2 700,00 -->2700,00 
+        //Format in 3 column 2 700.00 --> 2700,00 
         public  string GetFormattedCellValueNumber(string cellValue)
         {
-            if (decimal.TryParse(cellValue.Replace(".", ","), out decimal decimalValue))
-                return Math.Round(decimalValue, 2).ToString();
-
+            if (decimal.TryParse(cellValue, out decimal decimalValue))
+                return decimalValue.ToString("0.00", CultureInfo.InvariantCulture).Replace(".",",");
+           
+                  
             return cellValue;
         }
-
 
         //yyyy-mm-dd
         public  string FormatDate(string cellValue)
@@ -42,8 +41,6 @@ namespace FormatLibrary
             return cellValue.ToString();
         }
 
-
-
         public  string MobilePhone(string phones) => phones.Replace('|', ',');
 
         
@@ -52,7 +49,7 @@ namespace FormatLibrary
             int j = 0;
             for (int i = 1; i < columnHeaders.Count(); i++)
             {
-                for (; j < originalHeaders.Count(); j++)
+                for (; j < originalHeaders.Count();)
                     if (string.Equals(columnHeaders[i - 1], originalHeaders[j++], StringComparison.OrdinalIgnoreCase)) break;
                         else return false;               
             }

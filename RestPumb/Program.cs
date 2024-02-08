@@ -72,7 +72,6 @@ namespace RestPumb
                             throw new Exception("Headers mismatch ");
 
 
-
                         if (!classHelper.CompareHeaders(originalHeaders, columnHeaders))
                             throw new Exception("Invalid file");
 
