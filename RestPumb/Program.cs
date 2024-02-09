@@ -1,6 +1,5 @@
 ﻿using System;
 using OfficeOpenXml;
-using LicenseContext = OfficeOpenXml.LicenseContext;
 using System.IO;
 using System.Linq;
 using FormatLibrary;
@@ -13,6 +12,7 @@ namespace RestPumb
         {
 
             Console.Title = "Залишкі Пумб";
+            Console.WriteLine("Start processing....");
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             LoadExcelFile();
             Console.ReadKey();
@@ -39,13 +39,7 @@ namespace RestPumb
                     if (!File.Exists(currentDirectoryGetXlsx))
                         throw new Exception($"File {currentDirectoryGetXlsx} is not exist!!!");
 
-
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine("filter data field is:");
-                    Console.ResetColor();
-                    Console.WriteLine(string.Join(" ", rests));
-
-
+               
                     using (var package = new ExcelPackage(new FileInfo(currentDirectoryGetXlsx)))
                     {
 

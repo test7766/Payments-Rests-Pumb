@@ -11,7 +11,8 @@ namespace FormatLibrary
         //Format in 3 column 2 700.00 --> 2700,00 
         public  string GetFormattedCellValueNumber(string cellValue)
         {
-            if (decimal.TryParse(cellValue, out decimal decimalValue))
+
+            if (decimal.TryParse(cellValue.Replace(".", ","), out decimal decimalValue))
                 return decimalValue.ToString("0.00", CultureInfo.InvariantCulture).Replace(".",",");
            
                   

@@ -132,11 +132,17 @@ namespace PrivatPayments
                                             var resultFormatDotDate = classHelper.FormatDateDot(worksheet.Cells[row, col].Text);
                                             writer.Write($"{resultFormatDotDate};");
                                             Console.Write($"{resultFormatDotDate};");
+                                        } 
+                                        else if(col == 4)
+                                        {
+                                            var AutoRepFrmtheDebAccounts = classHelper.GetFormattedCellValueNumber(worksheet.Cells[row, col].Value.ToString());
+                                            writer.Write($"{AutoRepFrmtheDebAccounts};");
+                                            Console.Write($"{AutoRepFrmtheDebAccounts};");
                                         }
                                         else
                                         {
-                                            writer.Write($"{worksheet.Cells[row, col].Text};");
-                                            Console.Write($"{worksheet.Cells[row, col].Text};");
+                                            writer.Write($"{worksheet.Cells[row, col].Value};");
+                                            Console.Write($"{worksheet.Cells[row, col].Value};");
                                         }
                                     }
                                     
