@@ -15,7 +15,7 @@ namespace PrivateRests
 
 
 
-            Console.Title = "Платежі Приват";
+            Console.Title = "Залишкі Приват";
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             LoadExcelFile();
             Console.WriteLine("pres key to continue....");

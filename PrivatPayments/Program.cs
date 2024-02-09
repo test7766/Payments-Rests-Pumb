@@ -107,6 +107,9 @@ namespace PrivatPayments
                                     var column = worksheet.Cells[row, col].Text;
                                     if (col == colCount)
                                     {
+
+                                        var test = worksheet.Cells[row, col].Text;
+                                        var test2 = worksheet.Cells[row, col].Value;
                                         if (col==3)
                                         {
                                             var resultFormatDotDate = classHelper.FormatDateDot(worksheet.Cells[row, col].Text);
