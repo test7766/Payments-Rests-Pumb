@@ -3,8 +3,6 @@ using System.Linq;
 using System;
 using FormatLibrary;
 using OfficeOpenXml;
-using Microsoft.SqlServer.Server;
-using System.Globalization;
 
 namespace PrivateRests
 {
@@ -12,8 +10,6 @@ namespace PrivateRests
     {
         static void Main(string[] args)
         {
-
-
 
             Console.Title = "Залишкі Приват";
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -25,8 +21,8 @@ namespace PrivateRests
             {
 
                 ClassHelper classHelper = new ClassHelper();
-                //Payments
-                string[] paymentsFiltrHeaders = { "ClientID", "refContract", "Сума прострочки на дату залишків в валюті", "Непрострочений борг, в валюті", "Військовий" };
+                //Rests
+                string[] restsFiltrHeaders = { "ClientID", "refContract", "Сума прострочки на дату залишків в валюті", "Непрострочений борг, в валюті", "Військовий" };
 
                 string[] originalHeaders = { "Дата формування реєстра", "Дата передачі в аутсорс", "Дата по залишкам", "Каты/Інші кредити ФО і т.д.", "Служба відпрацювання",
                 "Назва компанії","ФІО боржника","clientId","refContract","IBAN рахунок для погашення","Карта для погашення","Днів у відпрацюванні","Валюта кредита",
@@ -35,7 +31,7 @@ namespace PrivateRests
                 "Борг по процентам на дату залишків в валюті","Борг по комісії/ пеня/ штрафам на дату залишків в валюті","Борг по тілу на дату залишків в грн","Борг по процентам на дату залишків в грн",
                 "Борг по комісії/ пеня/ штрафам на дату залишків в грн","Військовий","Реструктуризація доступна для борд/ червоних зон","військові з попереднього"};
 
-              
+
                 // relative path
                 string currentDirectoryGetXlsx = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\r.xlsx";
 
@@ -43,7 +39,7 @@ namespace PrivateRests
 
                 try
                 {
-
+                    Console.WriteLine("Start Proccesing....");
                     ///check Input xlsx
                     if (!File.Exists(currentDirectoryGetXlsx))
                         throw new Exception($"File {currentDirectoryGetXlsx} is not exist!!!");
@@ -52,12 +48,9 @@ namespace PrivateRests
                     using (var package = new ExcelPackage(new FileInfo(currentDirectoryGetXlsx)))
                     {
 
-                        ExcelWorksheets countSheets = package.Workbook.Worksheets;
-
                         //check Worksheets counts
                         if (package.Workbook.Worksheets.Count != 2)
                             throw new Exception("Count of Worksheets is mismatch");
-
 
 
                         //check name worksheets must be 2
@@ -78,8 +71,7 @@ namespace PrivateRests
                             throw new Exception("worksheet.Columns is null");
 
 
-                      
-                        worksheet.DeleteRow(1);
+                        worksheet.DeleteRow(1); //only 2 fields
 
 
                         // headers
@@ -96,62 +88,48 @@ namespace PrivateRests
                         int OriginalColumnsCount = worksheet.Dimension.Columns;
 
 
-                        foreach (var columnIndex in classHelper.GetColumnsToRemove(columnHeaders, paymentsFiltrHeaders).OrderByDescending(i => i))
+                        foreach (var columnIndex in classHelper.GetColumnsToRemove(columnHeaders, restsFiltrHeaders).OrderByDescending(i => i))
                             worksheet.DeleteColumn(columnIndex, 1);
+
 
 
                         int rowCount = worksheet.Dimension.Rows;
                         int colCount = worksheet.Dimension.Columns;
 
-
-                        ///Output Csv
-
+                        // Output Csv
                         using (var writer = new StreamWriter(outDirectoryPayment))
                         {
                             for (int row = 1; row <= rowCount; row++)
                             {
                                 for (int col = 1; col <= colCount; col++)
                                 {
-                                    var column = worksheet.Cells[row, col].Text;
-                                    if (col == colCount)
+                                    string cellValue = worksheet.Cells[row, col].Text.Trim();
+
+                                    if (col == 3)
                                     {
-                                        if (col == 4)
-                                        {
-                                            var resultReplacementDate = worksheet.Cells[row, col].Text.Replace("0", string.Empty).Replace(",", string.Empty);
-                                            writer.Write($"{resultReplacementDate}");
-                                            Console.Write($"{resultReplacementDate}");
-                                        }
-                                        else
-                                        {
-                                            writer.Write($"{worksheet.Cells[row, col].Text}");
-                                            Console.Write($"{worksheet.Cells[row, col].Text}");
-                                        }
+                                        cellValue = classHelper.GetFormattedCellValueNumber(cellValue);
                                     }
-                                    else
+                                    else if (col == 4 && cellValue == "0,00")
                                     {
-                                        if (col == 4)
-                                        {
-                                            var resultReplacementDate = worksheet.Cells[row, col].Text.Replace("0", string.Empty).Replace(",",string.Empty);
-                                            writer.Write($"{resultReplacementDate};");
-                                            Console.Write($"{resultReplacementDate};");
-                                        }
-                                        else
-                                        {
-                                            writer.Write($"{worksheet.Cells[row, col].Text};");
-                                            Console.Write($"{worksheet.Cells[row, col].Text};");
-                                        }
+                                        cellValue = cellValue.Replace("0", string.Empty).Replace(",", string.Empty).Trim();
                                     }
 
+                                    writer.Write($"{cellValue}");
+
+                                    if (col < colCount)
+                                    {
+                                        writer.Write(";");
+                                    }
                                 }
                                 writer.WriteLine();
-                                Console.WriteLine();
                             }
                         }
+
 
                         Console.ForegroundColor = ConsoleColor.Cyan;
                         Console.WriteLine("filter headers:");
                         Console.ResetColor();
-                        Console.WriteLine(string.Join(" ", paymentsFiltrHeaders));
+                        Console.WriteLine(string.Join(" ", restsFiltrHeaders));
 
                         Console.WriteLine("---------------------");
 
@@ -180,7 +158,6 @@ namespace PrivateRests
                 }
 
             }
-
 
         }
     }

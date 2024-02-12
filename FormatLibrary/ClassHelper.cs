@@ -8,7 +8,7 @@ namespace FormatLibrary
     public class ClassHelper
     {
 
-        //Format in 3 column 2 700.00 --> 2700,00 
+        //Format  column 2 700.00 --> 2700,00 
         public  string GetFormattedCellValueNumber(string cellValue)
         {
 
